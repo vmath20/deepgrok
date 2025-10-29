@@ -13,6 +13,7 @@ import { ChatBox } from '@/components/ChatBox';
 import { MindmapButton } from '@/components/MindmapButton';
 import { VisitorTracker } from '@/components/VisitorTracker';
 import { PromoPopup } from '@/components/PromoPopup';
+import { GitHubStarButton } from '@/components/GitHubStarButton';
 import type { WikiData } from '@/lib/types';
 import { SearchBar } from '@/components/SearchBar';
 import { checkClientRateLimit } from '@/lib/client-rate-limiter';
@@ -179,6 +180,11 @@ export default function Home() {
         </>
       ) : (
         <div className="relative flex-1 overflow-hidden">
+          {/* GitHub Star Button - Top Right */}
+          <div className="absolute top-8 right-8 z-20">
+            <GitHubStarButton />
+          </div>
+
           {/* Grain Gradient - positioned at bottom */}
           <div className="absolute bottom-0 left-0 right-0 z-0">
             <HeroGradient />
