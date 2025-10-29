@@ -22,12 +22,15 @@ export function TopNav({ onSearch, isLoading, showSearch = true, showExport = fa
       <div className="px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Left: Logo with ColorPanels */}
-          <div className="flex items-center gap-3 min-w-[220px]">
+          <a 
+            href="/"
+            className="flex items-center gap-3 min-w-[220px] hover:opacity-80 transition-opacity cursor-pointer"
+          >
             <div className="flex-shrink-0">
               <BrandShader size="small" />
             </div>
             <span className="font-normal tracking-normal" style={{ fontSize: '163%', lineHeight: '150%', letterSpacing: '0%' }}>DeepGrok</span>
-          </div>
+          </a>
 
           {/* Center: Search */}
           {showSearch && (
