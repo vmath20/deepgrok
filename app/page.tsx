@@ -10,6 +10,7 @@ import { PageNotFound } from '@/components/PageNotFound';
 import { LoadingState } from '@/components/LoadingState';
 import { HeroGradient } from '@/components/HeroGradient';
 import { ChatBox } from '@/components/ChatBox';
+import { MindmapButton } from '@/components/MindmapButton';
 import type { WikiData } from '@/lib/types';
 import { SearchBar } from '@/components/SearchBar';
 import { checkClientRateLimit } from '@/lib/client-rate-limiter';
@@ -161,6 +162,13 @@ export default function Home() {
               />
             </div>
           </div>
+          
+          {/* Mindmap Button */}
+          <MindmapButton 
+            pageUrl={wikiData.metadata?.source || ''}
+            pageMarkdown={wikiData.rawMarkdown || ''}
+            pageTitle={wikiData.title}
+          />
           
           {/* Chat with Page */}
           <ChatBox pageContext={wikiData.rawMarkdown || ''} pageTitle={wikiData.title} />

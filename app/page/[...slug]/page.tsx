@@ -9,6 +9,7 @@ import { SearchModal } from '@/components/SearchModal';
 import { PageNotFound } from '@/components/PageNotFound';
 import { LoadingState } from '@/components/LoadingState';
 import { ChatBox } from '@/components/ChatBox';
+import { MindmapButton } from '@/components/MindmapButton';
 import type { WikiData } from '@/lib/types';
 import { checkClientRateLimit } from '@/lib/client-rate-limiter';
 import { exportToPDF } from '@/lib/pdf-exporter';
@@ -191,6 +192,13 @@ export default function WikiPage() {
               />
             </div>
           </div>
+          
+          {/* Mindmap Button */}
+          <MindmapButton 
+            pageUrl={wikiData.metadata?.source || ''}
+            pageMarkdown={wikiData.rawMarkdown || ''}
+            pageTitle={wikiData.title}
+          />
           
           {/* Chat with Page */}
           <ChatBox pageContext={wikiData.rawMarkdown || ''} pageTitle={wikiData.title} />
