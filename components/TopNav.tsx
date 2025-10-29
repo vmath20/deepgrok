@@ -2,7 +2,7 @@
 
 import { SearchBar } from "@/components/SearchBar";
 import { BrandShader } from "@/components/BrandShader";
-import { Download, Copy } from "lucide-react";
+import { Download, Copy, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface TopNavProps {
@@ -36,6 +36,16 @@ export function TopNav({ onSearch, isLoading, showSearch = true, showExport = fa
 
           {/* Right: Actions */}
           <div className="flex items-center justify-end gap-2 min-w-[220px]">
+            {/* GitHub Star Button - Always visible */}
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Star on GitHub"
+              onClick={() => window.open('https://github.com/vmath20/deepgrok', '_blank')}
+            >
+              <Github className="h-5 w-5" />
+            </Button>
+            
             {showExport && (
               <>
                 {onCopyMarkdown && (
