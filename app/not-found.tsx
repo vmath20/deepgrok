@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { BrandShader } from '@/components/BrandShader';
 import { GitHubStarButton } from '@/components/GitHubStarButton';
+import { DiscordButton } from '@/components/DiscordButton';
 import { Button } from '@/components/ui/button';
 import { Home } from 'lucide-react';
 
@@ -12,8 +13,9 @@ export default function NotFound() {
   return (
     <div className="h-screen flex flex-col bg-background">
       <div className="flex-1 flex items-center justify-center relative">
-        {/* GitHub Star Button - Top Right */}
-        <div className="absolute top-4 right-4">
+        {/* Social Buttons - Top Right */}
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+          <DiscordButton />
           <GitHubStarButton />
         </div>
 

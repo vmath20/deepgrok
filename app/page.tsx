@@ -14,6 +14,7 @@ import { MindmapButton } from '@/components/MindmapButton';
 import { VisitorTracker } from '@/components/VisitorTracker';
 import { PromoPopup } from '@/components/PromoPopup';
 import { GitHubStarButton } from '@/components/GitHubStarButton';
+import { DiscordButton } from '@/components/DiscordButton';
 import type { WikiData } from '@/lib/types';
 import { SearchBar } from '@/components/SearchBar';
 import { checkClientRateLimit } from '@/lib/client-rate-limiter';
@@ -180,8 +181,9 @@ export default function Home() {
         </>
       ) : (
         <div className="relative flex-1 overflow-hidden">
-          {/* GitHub Star Button - Top Right */}
-          <div className="absolute top-4 right-4 z-20">
+          {/* Social Buttons - Top Right */}
+          <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+            <DiscordButton />
             <GitHubStarButton />
           </div>
 

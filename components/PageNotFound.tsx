@@ -3,6 +3,7 @@
 import { BrandShader } from '@/components/BrandShader';
 import { Button } from '@/components/ui/button';
 import { GitHubStarButton } from '@/components/GitHubStarButton';
+import { DiscordButton } from '@/components/DiscordButton';
 import { Home } from 'lucide-react';
 
 interface PageNotFoundProps {
@@ -12,8 +13,9 @@ interface PageNotFoundProps {
 export function PageNotFound({ onReturnHome }: PageNotFoundProps) {
   return (
     <div className="flex-1 flex items-center justify-center relative">
-      {/* GitHub Star Button - Top Right */}
-      <div className="absolute top-4 right-4">
+      {/* Social Buttons - Top Right */}
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <DiscordButton />
         <GitHubStarButton />
       </div>
 

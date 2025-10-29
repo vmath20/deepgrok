@@ -5,6 +5,7 @@ import { BrandShader } from "@/components/BrandShader";
 import { Download, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GitHubStarButton } from "@/components/GitHubStarButton";
+import { DiscordButton } from "@/components/DiscordButton";
 
 interface TopNavProps {
   onSearch: (query: string) => void;
@@ -39,6 +40,7 @@ export function TopNav({ onSearch, isLoading, showSearch = true, showExport = fa
           <div className="flex items-center justify-end gap-2 min-w-[220px]">
             {showExport && (
               <>
+                <DiscordButton />
                 <GitHubStarButton />
                 {onCopyMarkdown && (
                   <Button
