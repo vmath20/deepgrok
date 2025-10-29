@@ -1,3 +1,5 @@
+![Alt text](public/logo.png)
+
 # DeepGrok
 [![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/vmath20/deepgrok)
 
