@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         'X-Title': 'DeepGrok',
       },
       body: JSON.stringify({
-        model: 'minimax/minimax-m2:free',
+        model: 'x-ai/grok-beta',
         messages: [systemMessage, ...messages],
         temperature: 0.7,
         max_tokens: 1000,
