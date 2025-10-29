@@ -62,7 +62,7 @@ export function PromoPopup() {
               <iframe
                 width="100%"
                 height="100%"
-                src="https://www.youtube.com/embed/fsBt2Q5a8_A?autoplay=0&rel=0"
+                src="https://www.youtube.com/embed/F-AeJibw0NQ?autoplay=0&rel=0"
                 title="DeepGrok Introduction"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
