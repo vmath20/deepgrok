@@ -5,7 +5,13 @@ export const metadata: Metadata = {
   title: "DeepGrok",
   description: "Explore Grokipedia pages with enhanced navigation, search, and structure powered by Firecrawl",
   icons: {
-    icon: '/icon.svg',
+    icon: [
+      {
+        url: '/icon.svg',
+        type: 'image/svg+xml',
+      },
+    ],
+    apple: '/icon.svg',
   },
 };
 
