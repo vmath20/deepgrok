@@ -31,14 +31,34 @@ export function MindmapViewer({ markdown }: MindmapViewerProps) {
             duration: 500,
             maxWidth: 300,
             color: (node: any) => {
-              const colors = ['#FF9D00', '#809BFF', '#6D2EFF', '#F15CFF', '#FFD557'];
+              const colors = ['#FF9D00', '#809BFF', '#6D2EFF', '#F15CFF', '#FFD557', '#FD4F30'];
               const depth = node.state?.depth || 0;
               return colors[depth % colors.length];
             },
+            nodeFont: '14px sans-serif',
+            nodeMinHeight: 24,
+            paddingX: 12,
+            spacingVertical: 10,
+            spacingHorizontal: 80,
+            autoFit: true,
+            colorFreezeLevel: 0,
           }, root);
 
           // Fit the mindmap to viewport
           mm.fit();
+          
+          // Style text to be white
+          if (svgRef.current) {
+            const textElements = svgRef.current.querySelectorAll('foreignObject');
+            textElements.forEach((el) => {
+              const div = el.querySelector('div');
+              if (div) {
+                div.style.color = 'white';
+                div.style.fontSize = '14px';
+                div.style.fontWeight = '500';
+              }
+            });
+          }
         }
       } catch (err) {
         console.error('Error loading markmap:', err);
@@ -62,10 +82,23 @@ export function MindmapViewer({ markdown }: MindmapViewerProps) {
   }
 
   return (
-    <div className="w-full h-full bg-background rounded-lg border overflow-hidden">
+    <div className="w-full h-full bg-black rounded-lg border border-white/10 overflow-hidden">
+      <style>{`
+        .markmap-node text {
+          fill: white !important;
+          font-size: 14px !important;
+          font-weight: 500 !important;
+        }
+        .markmap-node circle {
+          stroke-width: 2 !important;
+        }
+        .markmap-link {
+          stroke-width: 2 !important;
+        }
+      `}</style>
       <svg
         ref={svgRef}
-        className="w-full h-full"
+        className="w-full h-full mindmap-svg"
         style={{ minHeight: '500px' }}
       />
     </div>
