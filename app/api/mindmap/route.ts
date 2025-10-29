@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         'X-Title': 'DeepGrok',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.0-flash-exp:free',
+        model: 'openai/gpt-4o',
         messages: [
           {
             role: 'user',
