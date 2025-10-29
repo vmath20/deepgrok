@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Minimize2, Maximize2 } from 'lucide-react';
+import { Send, Loader2, Minimize2, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -20,21 +20,74 @@ export function ChatBox({ pageContext, pageTitle }: ChatBoxProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
+  const [position, setPosition] = useState({ x: 32, y: 32 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
-    // Scroll the ScrollArea viewport
     const viewport = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
     if (viewport) {
       viewport.scrollTop = viewport.scrollHeight;
     }
-    
-    // Also scroll using the ref at the end
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Cmd+I to toggle chat
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'i') {
+        e.preventDefault();
+        setIsMinimized((prev) => !prev);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Handle dragging
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      
+      // Keep within viewport bounds
+      const maxX = window.innerWidth - (chatBoxRef.current?.offsetWidth || 400) - 16;
+      const maxY = window.innerHeight - (chatBoxRef.current?.offsetHeight || 500) - 16;
+      
+      setPosition({
+        x: Math.max(16, Math.min(newX, maxX)),
+        y: Math.max(16, Math.min(newY, maxY)),
+      });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragStart]);
+
+  const handleDragStart = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y,
+    });
+  };
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -146,17 +199,24 @@ export function ChatBox({ pageContext, pageTitle }: ChatBoxProps) {
   return (
     <div className="fixed bottom-8 right-8 z-50 w-96">
       <div className="rounded-2xl border border-white/20 bg-white/5 backdrop-blur-2xl shadow-2xl overflow-hidden">
-        {/* Header */}
-        <div className="border-b border-white/10 px-4 py-3 flex items-center justify-between">
-          <div>
+        {/* Header - Draggable */}
+        <div 
+          className="border-b border-white/10 px-4 py-3 flex items-center justify-between cursor-move"
+          onMouseDown={handleDragStart}
+        >
+          <div className="pointer-events-none">
             <h3 className="text-sm font-semibold text-white">Chat with Page</h3>
             <p className="text-xs text-white/60 truncate">{pageTitle}</p>
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10"
-            onClick={() => setIsMinimized(true)}
+            className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10 pointer-events-auto"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMinimized(true);
+            }}
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <Minimize2 className="h-4 w-4" />
           </Button>
