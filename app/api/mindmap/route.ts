@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         'X-Title': 'DeepGrok',
       },
       body: JSON.stringify({
-        model: 'deepseek/deepseek-chat-v3.1:free',
+        model: 'meta-llama/llama-3.2-3b-instruct:free',
         messages: [
           {
             role: 'user',
