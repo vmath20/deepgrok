@@ -12,6 +12,7 @@ import { HeroGradient } from '@/components/HeroGradient';
 import { ChatBox } from '@/components/ChatBox';
 import { MindmapButton } from '@/components/MindmapButton';
 import { VisitorTracker } from '@/components/VisitorTracker';
+import { PromoPopup } from '@/components/PromoPopup';
 import type { WikiData } from '@/lib/types';
 import { SearchBar } from '@/components/SearchBar';
 import { checkClientRateLimit } from '@/lib/client-rate-limiter';
@@ -127,6 +128,7 @@ export default function Home() {
   return (
     <div className="h-screen flex flex-col bg-background">
       <VisitorTracker />
+      <PromoPopup />
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
