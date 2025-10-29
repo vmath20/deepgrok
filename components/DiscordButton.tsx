@@ -1,6 +1,6 @@
 'use client';
 
-import { MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
 export function DiscordButton() {
@@ -16,7 +16,13 @@ export function DiscordButton() {
       className="rounded-full border-border/50 hover:border-border"
       aria-label="Join Discord"
     >
-      <MessageSquare className="h-5 w-5" />
+      <Image 
+        src="/icons8-discord-50.svg" 
+        alt="Discord" 
+        width={20} 
+        height={20}
+        className="h-5 w-5"
+      />
     </Button>
   );
 }
