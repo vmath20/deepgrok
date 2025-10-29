@@ -5,13 +5,7 @@ export const metadata: Metadata = {
   title: "DeepGrok",
   description: "Explore Grokipedia pages with enhanced navigation, search, and structure powered by Firecrawl",
   icons: {
-    icon: [
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/icon.svg',
+    icon: '/icon.svg',
   },
 };
 
@@ -23,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
         {/* Always dark mode */}
         <script
           dangerouslySetInnerHTML={{
