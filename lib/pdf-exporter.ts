@@ -124,64 +124,45 @@ export async function exportToPDF(options: ExportOptions): Promise<void> {
         pdf.setFontSize(11);
       } else if (block.type === 'paragraph') {
         pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(11);
         
-        // Handle text with citations
-        const segments = parseTextWithCitations(block.text);
-        let currentLine = '';
-        let xPos = margin;
-        const lineHeight = 5;
+        // For simplicity and proper alignment, render the whole paragraph as wrapped text
+        // Replace citation markers with superscript notation inline
+        const textWithCitations = block.text.replace(/\[(\d+)\]/g, '^[$1]');
         
-        for (let j = 0; j < segments.length; j++) {
-          const segment = segments[j];
+        const lines = pdf.splitTextToSize(textWithCitations, contentWidth);
+        
+        for (const line of lines) {
+          if (yPosition > pageHeight - margin - 10) {
+            pdf.addPage();
+            yPosition = margin;
+          }
           
-          if (segment.isCitation) {
-            // Flush current line if we have text
-            if (currentLine) {
-              const lines = pdf.splitTextToSize(currentLine, contentWidth);
-              for (const line of lines) {
-                if (yPosition > pageHeight - margin - 10) {
-                  pdf.addPage();
-                  yPosition = margin;
-                }
-                pdf.text(line, margin, yPosition);
-                yPosition += lineHeight;
-              }
-              currentLine = '';
-              xPos = pdf.getTextWidth(lines[lines.length - 1] || '');
+          // Render line with inline citation formatting
+          let xPos = margin;
+          const parts = line.split(/(\^\[\d+\])/g);
+          
+          for (const part of parts) {
+            if (part.match(/^\^\[(\d+)\]$/)) {
+              // This is a citation
+              const citNum = part.match(/\d+/)?.[0] || '';
+              pdf.setFontSize(7);
+              pdf.setTextColor(170, 170, 170);
+              
+              const citText = `[${citNum}]`;
+              pdf.text(citText, xPos, yPosition - 1.5);
+              xPos += pdf.getTextWidth(citText);
+              
+              pdf.setFontSize(11);
+              pdf.setTextColor(0, 0, 0);
+            } else if (part) {
+              // Regular text
+              pdf.text(part, xPos, yPosition);
+              xPos += pdf.getTextWidth(part);
             }
-            
-            // Add superscript citation
-            const currentY = yPosition - lineHeight; // Go back to last line
-            pdf.setFontSize(7);
-            pdf.setTextColor(170, 170, 170);
-            
-            // Create internal link to reference
-            const linkText = `[${segment.text}]`;
-            pdf.link(xPos + margin, currentY - 3, pdf.getTextWidth(linkText), 4, { 
-              pageNumber: getPDFPageNumber(pdf, `ref-${segment.text}`)
-            });
-            pdf.text(linkText, xPos + margin, currentY - 1.5);
-            
-            xPos += pdf.getTextWidth(linkText);
-            
-            pdf.setFontSize(11);
-            pdf.setTextColor(0, 0, 0);
-          } else {
-            currentLine += segment.text;
           }
-        }
-        
-        // Flush remaining text
-        if (currentLine) {
-          const lines = pdf.splitTextToSize(currentLine.trim(), contentWidth);
-          for (const line of lines) {
-            if (yPosition > pageHeight - margin - 10) {
-              pdf.addPage();
-              yPosition = margin;
-            }
-            pdf.text(line, margin, yPosition);
-            yPosition += lineHeight;
-          }
+          
+          yPosition += 5;
         }
         
         yPosition += 4; // Increased paragraph spacing
