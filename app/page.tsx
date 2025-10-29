@@ -197,8 +197,19 @@ export default function Home() {
               <span className="block">Search anything.</span>
               <span className="block">Find the truth.</span>
             </h1>
-            <div className="mt-10 w-full max-w-3xl mb-20">
+            <div className="mt-10 w-full max-w-3xl mb-4">
               <SearchBar onSearch={handleSearch} isLoading={isLoading} variant="hero" />
+            </div>
+            
+            {/* Example Search */}
+            <div className="text-sm text-white/60 mb-20">
+              Try:{' '}
+              <button
+                onClick={() => handleSearch('Elon Musk')}
+                className="text-white/80 hover:text-white underline underline-offset-4 transition-colors"
+              >
+                Elon Musk
+              </button>
             </div>
           </div>
         </div>
