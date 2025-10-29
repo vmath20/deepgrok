@@ -37,6 +37,10 @@ export function ChatBox({ pageContext, pageTitle }: ChatBoxProps) {
     setInput('');
     setIsLoading(true);
 
+    // Add empty assistant message that we'll update as we stream
+    const assistantMessageIndex = messages.length + 1;
+    setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -53,22 +57,59 @@ export function ChatBox({ pageContext, pageTitle }: ChatBoxProps) {
         throw new Error('Failed to get response');
       }
 
-      const data = await response.json();
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: data.message,
-      };
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      if (!reader) {
+        throw new Error('No reader available');
+      }
+
+      let accumulatedContent = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n').filter(line => line.trim() !== '');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.content) {
+                accumulatedContent += parsed.content;
+                
+                // Update the assistant message in real-time
+                setMessages((prev) => {
+                  const updated = [...prev];
+                  updated[assistantMessageIndex] = {
+                    role: 'assistant',
+                    content: accumulatedContent,
+                  };
+                  return updated;
+                });
+              }
+            } catch (e) {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages((prev) => [
-        ...prev,
-        {
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[assistantMessageIndex] = {
           role: 'assistant',
           content: 'Sorry, I encountered an error. Please try again.',
-        },
-      ]);
+        };
+        return updated;
+      });
     } finally {
       setIsLoading(false);
     }
