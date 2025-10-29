@@ -111,3 +111,5 @@ The application exposes several API endpoints for its core functionalities:
 -   `POST /api/chat`: A streaming endpoint that takes chat `messages` and page `context` to facilitate a conversation with an AI model about the page content.
 -   `POST /api/mindmap`: Accepts a `url` and `markdown` content to generate a hierarchical mindmap structure. It uses caching to avoid re-generating mindmaps for the same page.
 -   `GET /api/analytics`: Retrieves visitor analytics from the Supabase database.
+
+If you liked this project, follow me on X: https://x.com/theadistar
