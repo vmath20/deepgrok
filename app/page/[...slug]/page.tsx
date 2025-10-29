@@ -8,6 +8,7 @@ import { WikiContent } from '@/components/WikiContent';
 import { SearchModal } from '@/components/SearchModal';
 import { PageNotFound } from '@/components/PageNotFound';
 import { LoadingState } from '@/components/LoadingState';
+import { ChatBox } from '@/components/ChatBox';
 import type { WikiData } from '@/lib/types';
 import { checkClientRateLimit } from '@/lib/client-rate-limiter';
 import { exportToPDF } from '@/lib/pdf-exporter';
@@ -173,22 +174,27 @@ export default function WikiPage() {
           </div>
         </div>
       ) : wikiData ? (
-        <div className="flex-1 flex overflow-hidden">
-          <WikiSidebar
-            toc={wikiData.tableOfContents}
-            title={wikiData.title}
-            activeSection={activeSection}
-          />
-
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <WikiContent
-              sections={wikiData.sections}
-              rawMarkdown={wikiData.rawMarkdown}
-              onSectionChange={setActiveSection}
-              sourceUrl={wikiData.metadata?.source}
+        <>
+          <div className="flex-1 flex overflow-hidden">
+            <WikiSidebar
+              toc={wikiData.tableOfContents}
+              title={wikiData.title}
+              activeSection={activeSection}
             />
+
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <WikiContent
+                sections={wikiData.sections}
+                rawMarkdown={wikiData.rawMarkdown}
+                onSectionChange={setActiveSection}
+                sourceUrl={wikiData.metadata?.source}
+              />
+            </div>
           </div>
-        </div>
+          
+          {/* Chat with Page */}
+          <ChatBox pageContext={wikiData.rawMarkdown || ''} pageTitle={wikiData.title} />
+        </>
       ) : null}
     </div>
   );
