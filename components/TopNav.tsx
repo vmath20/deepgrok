@@ -2,7 +2,7 @@
 
 import { SearchBar } from "@/components/SearchBar";
 import { BrandShader } from "@/components/BrandShader";
-import { Download } from "lucide-react";
+import { Download, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface TopNavProps {
@@ -11,9 +11,10 @@ interface TopNavProps {
   showSearch?: boolean;
   showExport?: boolean;
   onExport?: () => void;
+  onCopyMarkdown?: () => void;
 }
 
-export function TopNav({ onSearch, isLoading, showSearch = true, showExport = false, onExport }: TopNavProps) {
+export function TopNav({ onSearch, isLoading, showSearch = true, showExport = false, onExport, onCopyMarkdown }: TopNavProps) {
   return (
     <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm">
       <div className="px-4 py-3">
@@ -35,15 +36,29 @@ export function TopNav({ onSearch, isLoading, showSearch = true, showExport = fa
 
           {/* Right: Actions */}
           <div className="flex items-center justify-end gap-2 min-w-[220px]">
-            {showExport && onExport && (
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Export to PDF"
-                onClick={onExport}
-              >
-                <Download className="h-5 w-5" />
-              </Button>
+            {showExport && (
+              <>
+                {onCopyMarkdown && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Copy as Markdown"
+                    onClick={onCopyMarkdown}
+                  >
+                    <Copy className="h-5 w-5" />
+                  </Button>
+                )}
+                {onExport && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Export to PDF"
+                    onClick={onExport}
+                  >
+                    <Download className="h-5 w-5" />
+                  </Button>
+                )}
+              </>
             )}
           </div>
         </div>

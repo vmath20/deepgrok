@@ -11,6 +11,7 @@ import { LoadingState } from '@/components/LoadingState';
 import type { WikiData } from '@/lib/types';
 import { checkClientRateLimit } from '@/lib/client-rate-limiter';
 import { exportToPDF } from '@/lib/pdf-exporter';
+import { copyAsMarkdown } from '@/lib/markdown-exporter';
 
 export default function WikiPage() {
   const params = useParams();
@@ -127,6 +128,16 @@ export default function WikiPage() {
     }
   };
 
+  const handleCopyMarkdown = async () => {
+    if (!wikiData) return;
+    
+    try {
+      await copyAsMarkdown(wikiData.title, wikiData.rawMarkdown || '');
+    } catch (error) {
+      console.error('Copy markdown failed:', error);
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col bg-background">
       <SearchModal
@@ -146,7 +157,8 @@ export default function WikiPage() {
         isLoading={isLoading} 
         showSearch={!!wikiData} 
         showExport={!!wikiData && !isLoading && !error && !is404} 
-        onExport={handleExport} 
+        onExport={handleExport}
+        onCopyMarkdown={handleCopyMarkdown}
       />
 
       {isLoading ? (
