@@ -35,30 +35,29 @@ export function MindmapViewer({ markdown }: MindmapViewerProps) {
               const depth = node.state?.depth || 0;
               return colors[depth % colors.length];
             },
-            nodeFont: '14px sans-serif',
-            nodeMinHeight: 24,
             paddingX: 12,
             spacingVertical: 10,
             spacingHorizontal: 80,
             autoFit: true,
-            colorFreezeLevel: 0,
           }, root);
 
           // Fit the mindmap to viewport
           mm.fit();
           
           // Style text to be white
-          if (svgRef.current) {
-            const textElements = svgRef.current.querySelectorAll('foreignObject');
-            textElements.forEach((el) => {
-              const div = el.querySelector('div');
-              if (div) {
-                div.style.color = 'white';
-                div.style.fontSize = '14px';
-                div.style.fontWeight = '500';
-              }
-            });
-          }
+          setTimeout(() => {
+            if (svgRef.current) {
+              const textElements = svgRef.current.querySelectorAll('foreignObject');
+              textElements.forEach((el) => {
+                const div = el.querySelector('div');
+                if (div) {
+                  div.style.color = 'white';
+                  div.style.fontSize = '14px';
+                  div.style.fontWeight = '500';
+                }
+              });
+            }
+          }, 100);
         }
       } catch (err) {
         console.error('Error loading markmap:', err);
