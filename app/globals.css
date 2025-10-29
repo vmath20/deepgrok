@@ -1,0 +1,256 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 67%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --ring: 0 0% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Aeonik', sans-serif;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-md;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Wiki content styles - headings now handled by HeaderWithLink component */
+
+.wiki-content p {
+  @apply mb-5 leading-relaxed text-base text-white;
+}
+
+.wiki-content ul, .wiki-content ol {
+  @apply mb-5 ml-6 space-y-2;
+}
+
+.wiki-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.wiki-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+.wiki-content li {
+  @apply leading-relaxed text-white;
+  display: list-item;
+}
+
+.wiki-content li::marker {
+  color: white;
+}
+
+.wiki-content a {
+  @apply text-white hover:underline decoration-2 underline-offset-2 font-medium transition-colors;
+}
+
+.wiki-content code {
+  @apply bg-muted text-white px-2 py-0.5 rounded-md text-sm font-mono;
+}
+
+.wiki-content pre {
+  @apply bg-muted p-5 rounded-xl overflow-x-auto mb-6 border shadow-sm;
+}
+
+.wiki-content pre code {
+  @apply bg-transparent text-white px-0 py-0;
+}
+
+.wiki-content blockquote {
+  @apply border-l-4 border-primary pl-6 pr-4 py-2 italic my-6 bg-primary/5 rounded-r-lg text-white;
+}
+
+.wiki-content table {
+  @apply w-full border-collapse mb-6 rounded-lg overflow-hidden shadow-sm;
+}
+
+.wiki-content th, .wiki-content td {
+  @apply border border-border px-4 py-3 text-white;
+}
+
+.wiki-content th {
+  @apply bg-primary/10 font-semibold text-left text-white;
+}
+
+.wiki-content img {
+  @apply rounded-lg shadow-md my-6;
+}
+
+.wiki-content hr {
+  @apply my-8 border-border;
+}
+
+/* Citation superscripts */
+.wiki-content sup.citation-sup {
+  @apply text-xs leading-none ml-0.5;
+  color: #ababab;
+}
+
+.wiki-content .citation-link {
+  @apply no-underline cursor-pointer relative inline-block;
+  text-decoration: none !important;
+  color: #ababab;
+}
+
+.wiki-content .citation-link .bracket {
+  color: #ababab;
+  font-weight: 400;
+}
+
+.wiki-content .citation-link:hover .bracket {
+  @apply text-muted-foreground/70;
+}
+
+/* Citation hover tooltip - styled gray box with title/source */
+.wiki-content .citation-link::after {
+  content: attr(data-cite-title);
+  @apply absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-4 py-2 text-sm bg-popover/95 backdrop-blur-sm rounded-lg shadow-2xl pointer-events-none opacity-0 transition-opacity;
+  color: rgba(156, 163, 175, 1);
+  border: 1px solid rgba(75, 85, 99, 0.4);
+  z-index: 50;
+  min-width: 200px;
+  max-width: 500px;
+  width: max-content;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.wiki-content .citation-link:hover::after {
+  @apply opacity-100;
+}
+
+/* References section */
+.wiki-content .references-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
+  margin-top: 1rem;
+}
+
+.wiki-content .reference-item {
+  @apply flex gap-1.5 items-start;
+  break-inside: avoid;
+  line-height: 1.5;
+}
+
+.wiki-content .reference-number {
+  @apply font-normal text-white flex-shrink-0;
+  min-width: 1.75rem;
+}
+
+.wiki-content .reference-content {
+  @apply flex-1;
+}
+
+.wiki-content .reference-link {
+  @apply text-blue-500 hover:text-blue-400 hover:underline;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.wiki-content .reference-source {
+  @apply text-white/60 italic text-sm;
+  margin-left: 0.25rem;
+}
+
+.wiki-content .reference-placeholder {
+  @apply text-white/70;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* Responsive: single column on smaller screens */
+@media (max-width: 768px) {
+  .wiki-content .references-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Attribution line below references */
+.wiki-content .attribution-line {
+  @apply mt-8 pt-6 border-t border-border/20 text-sm;
+  color: #ababab;
+}
+
+.wiki-content .attribution-line a {
+  @apply text-blue-500 hover:text-blue-400 hover:underline;
+}
+
