@@ -181,7 +181,7 @@ export default function Home() {
       ) : (
         <div className="relative flex-1 overflow-hidden">
           {/* GitHub Star Button - Top Right */}
-          <div className="absolute top-8 right-8 z-20">
+          <div className="absolute top-4 right-4 z-20">
             <GitHubStarButton />
           </div>
 

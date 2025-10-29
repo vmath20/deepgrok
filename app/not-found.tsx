@@ -13,7 +13,7 @@ export default function NotFound() {
     <div className="h-screen flex flex-col bg-background">
       <div className="flex-1 flex items-center justify-center relative">
         {/* GitHub Star Button - Top Right */}
-        <div className="absolute top-8 right-8">
+        <div className="absolute top-4 right-4">
           <GitHubStarButton />
         </div>
 

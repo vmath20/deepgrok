@@ -13,7 +13,7 @@ export function PageNotFound({ onReturnHome }: PageNotFoundProps) {
   return (
     <div className="flex-1 flex items-center justify-center relative">
       {/* GitHub Star Button - Top Right */}
-      <div className="absolute top-8 right-8">
+      <div className="absolute top-4 right-4">
         <GitHubStarButton />
       </div>
 
