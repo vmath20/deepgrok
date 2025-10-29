@@ -36,7 +36,8 @@ export function GitHubStarButton() {
         alt="GitHub" 
         width={20} 
         height={20}
-        className="h-5 w-5"
+        className="h-5 w-5 invert brightness-0"
+        style={{ filter: 'invert(1) brightness(2)' }}
       />
       <span className="text-sm font-medium">GitHub</span>
       <Star className="h-3.5 w-3.5 text-yellow-500" fill="currentColor" />

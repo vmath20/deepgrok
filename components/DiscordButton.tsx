@@ -19,7 +19,8 @@ export function DiscordButton() {
         alt="Discord" 
         width={20} 
         height={20}
-        className="h-5 w-5"
+        className="h-5 w-5 invert brightness-0"
+        style={{ filter: 'invert(1) brightness(2)' }}
       />
       <span className="text-sm font-medium">Discord</span>
     </button>
