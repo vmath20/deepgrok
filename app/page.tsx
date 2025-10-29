@@ -180,15 +180,15 @@ export default function Home() {
           <ChatBox pageContext={wikiData.rawMarkdown || ''} pageTitle={wikiData.title} />
         </>
       ) : (
-        <div className="relative flex-1 overflow-hidden">
+        <div className="relative flex-1">
           {/* Social Buttons - Top Right */}
-          <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+          <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
             <DiscordButton />
             <GitHubStarButton />
           </div>
 
           {/* Grain Gradient - positioned at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 z-0">
+          <div className="absolute bottom-0 left-0 right-0 z-0 overflow-hidden">
             <HeroGradient />
           </div>
 
