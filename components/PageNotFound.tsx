@@ -30,6 +30,11 @@ export function PageNotFound({ onReturnHome }: PageNotFoundProps) {
           This page doesn't exist... yet
         </h2>
 
+        {/* Disclaimer */}
+        <p className="text-xs text-muted-foreground mt-4 leading-relaxed max-w-md mx-auto">
+          Note: We only support a limited number of articles currently indexed on Grokipedia, which is why some pages won't work.
+        </p>
+
         {/* Return Home Button */}
         <Button 
           onClick={onReturnHome}

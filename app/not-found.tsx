@@ -25,21 +25,26 @@ export default function NotFound() {
             <BrandShader size="large" />
           </div>
 
-          {/* Text */}
-          <h2 className="text-3xl font-light text-foreground mt-8">
-            This page doesn't exist... yet
-          </h2>
+        {/* Text */}
+        <h2 className="text-3xl font-light text-foreground mt-8">
+          This page doesn't exist... yet
+        </h2>
 
-          {/* Return Home Button */}
-          <Button 
-            onClick={() => router.push('/')}
-            variant="outline"
-            size="lg"
-            className="mt-6"
-          >
-            <Home className="h-4 w-4 mr-2" />
-            Return to home
-          </Button>
+        {/* Disclaimer */}
+        <p className="text-xs text-muted-foreground mt-4 leading-relaxed max-w-md mx-auto">
+          Note: We only support a limited number of articles currently indexed on Grokipedia, which is why some pages won't work.
+        </p>
+
+        {/* Return Home Button */}
+        <Button 
+          onClick={() => router.push('/')}
+          variant="outline"
+          size="lg"
+          className="mt-6"
+        >
+          <Home className="h-4 w-4 mr-2" />
+          Return to home
+        </Button>
         </div>
       </div>
     </div>
