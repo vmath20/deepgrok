@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MindGrokipedia - Deep Wiki Explorer",
+  title: "DeepGrok",
   description: "Explore Grokipedia pages with enhanced navigation, search, and structure powered by Firecrawl",
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
