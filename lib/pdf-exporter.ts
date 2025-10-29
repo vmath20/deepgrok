@@ -32,12 +32,22 @@ export async function exportToPDF(options: ExportOptions): Promise<void> {
     
     let yPosition = margin;
 
-    // Add DeepGrok branding at top
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(150, 150, 150);
-    pdf.text('DeepGrok', margin, yPosition);
-    yPosition += 8;
+    // Add DeepGrok logo image
+    try {
+      const logoImg = await loadImage('/logoWhite.png');
+      const logoHeight = 8; // Height in mm
+      const logoWidth = logoHeight * (logoImg.width / logoImg.height); // Maintain aspect ratio
+      pdf.addImage(logoImg, 'PNG', margin, yPosition, logoWidth, logoHeight);
+      yPosition += logoHeight + 5;
+    } catch (err) {
+      // Fallback to text if logo fails to load
+      console.warn('Logo failed to load, using text fallback');
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(150, 150, 150);
+      pdf.text('DeepGrok', margin, yPosition);
+      yPosition += 8;
+    }
 
     // Add separator
     pdf.setDrawColor(220, 220, 220);
@@ -66,11 +76,34 @@ export async function exportToPDF(options: ExportOptions): Promise<void> {
 
     // Process content
     const content = parseContentForPDF(contentElement as HTMLElement);
+    let inReferencesSection = false;
     
-    for (const block of content) {
+    for (let i = 0; i < content.length; i++) {
+      const block = content[i];
+      
+      // Check if this is the start of references
+      if (block.type === 'reference' && !inReferencesSection) {
+        inReferencesSection = true;
+        
+        // Add References heading
+        if (yPosition + 15 > pageHeight - margin) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        
+        yPosition += 8;
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(16);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text('References', margin, yPosition);
+        yPosition += 8;
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(11);
+      }
+      
       // Check if we need a new page
-      const estimatedHeight = block.type === 'heading' ? 10 : 6;
-      if (yPosition + estimatedHeight > pageHeight - margin) {
+      const estimatedHeight = block.type === 'heading' ? 12 : block.type === 'paragraph' ? 8 : 6;
+      if (yPosition + estimatedHeight > pageHeight - margin - 10) {
         pdf.addPage();
         yPosition = margin;
       }
@@ -94,71 +127,109 @@ export async function exportToPDF(options: ExportOptions): Promise<void> {
         
         // Handle text with citations
         const segments = parseTextWithCitations(block.text);
+        let currentLine = '';
         let xPos = margin;
+        const lineHeight = 5;
         
-        for (const segment of segments) {
+        for (let j = 0; j < segments.length; j++) {
+          const segment = segments[j];
+          
           if (segment.isCitation) {
-            // Add superscript citation in gray
-            const currentFontSize = 11;
-            pdf.setFontSize(8);
-            pdf.setTextColor(170, 170, 170);
-            
-            // Create link to reference section
-            pdf.textWithLink(`[${segment.text}]`, xPos, yPosition - 2, {
-              url: `#ref-${segment.text}`
-            });
-            
-            const citWidth = pdf.getTextWidth(`[${segment.text}]`);
-            xPos += citWidth;
-            
-            pdf.setFontSize(currentFontSize);
-            pdf.setTextColor(0, 0, 0);
-          } else {
-            // Regular text - wrap if needed
-            const words = segment.text.split(' ');
-            for (const word of words) {
-              const wordWidth = pdf.getTextWidth(word + ' ');
-              
-              if (xPos + wordWidth > pageWidth - margin) {
-                yPosition += 5;
-                xPos = margin;
-                
-                if (yPosition > pageHeight - margin) {
+            // Flush current line if we have text
+            if (currentLine) {
+              const lines = pdf.splitTextToSize(currentLine, contentWidth);
+              for (const line of lines) {
+                if (yPosition > pageHeight - margin - 10) {
                   pdf.addPage();
                   yPosition = margin;
                 }
+                pdf.text(line, margin, yPosition);
+                yPosition += lineHeight;
               }
-              
-              pdf.text(word + ' ', xPos, yPosition);
-              xPos += wordWidth;
+              currentLine = '';
+              xPos = pdf.getTextWidth(lines[lines.length - 1] || '');
             }
+            
+            // Add superscript citation
+            const currentY = yPosition - lineHeight; // Go back to last line
+            pdf.setFontSize(7);
+            pdf.setTextColor(170, 170, 170);
+            
+            // Create internal link to reference
+            const linkText = `[${segment.text}]`;
+            pdf.link(xPos + margin, currentY - 3, pdf.getTextWidth(linkText), 4, { 
+              pageNumber: getPDFPageNumber(pdf, `ref-${segment.text}`)
+            });
+            pdf.text(linkText, xPos + margin, currentY - 1.5);
+            
+            xPos += pdf.getTextWidth(linkText);
+            
+            pdf.setFontSize(11);
+            pdf.setTextColor(0, 0, 0);
+          } else {
+            currentLine += segment.text;
           }
         }
         
-        yPosition += 6;
+        // Flush remaining text
+        if (currentLine) {
+          const lines = pdf.splitTextToSize(currentLine.trim(), contentWidth);
+          for (const line of lines) {
+            if (yPosition > pageHeight - margin - 10) {
+              pdf.addPage();
+              yPosition = margin;
+            }
+            pdf.text(line, margin, yPosition);
+            yPosition += lineHeight;
+          }
+        }
+        
+        yPosition += 4; // Increased paragraph spacing
       } else if (block.type === 'list-item') {
         pdf.setTextColor(0, 0, 0);
         const bullet = '• ';
         const lines = pdf.splitTextToSize(bullet + block.text, contentWidth - 5);
-        pdf.text(lines, margin + 5, yPosition);
-        yPosition += lines.length * 5;
+        
+        for (const line of lines) {
+          if (yPosition > pageHeight - margin - 10) {
+            pdf.addPage();
+            yPosition = margin;
+          }
+          pdf.text(line, margin + 5, yPosition);
+          yPosition += 5;
+        }
       } else if (block.type === 'reference') {
-        // Reference item with anchor
+        if (yPosition > pageHeight - margin - 15) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        
+        // Mark anchor point for this reference
+        const refAnchor = `ref-${block.number}`;
+        (pdf as any).internal.write(`/Name (${refAnchor})`);
+        
         pdf.setFont('helvetica', 'normal');
         pdf.setFontSize(9);
         pdf.setTextColor(0, 0, 0);
         
-        // Add anchor point
-        const refId = `ref-${block.number}`;
-        pdf.text(`${block.number}. `, margin, yPosition);
+        // Number
+        pdf.text(`${block.number}.`, margin, yPosition);
         
-        // Add link in blue
+        // Link in blue
         pdf.setTextColor(0, 102, 204);
-        const refText = block.text.substring(0, 200); // Limit length
+        const refText = block.text;
         const lines = pdf.splitTextToSize(refText, contentWidth - 10);
-        pdf.text(lines, margin + 8, yPosition);
         
-        yPosition += lines.length * 4 + 1;
+        for (const line of lines) {
+          if (yPosition > pageHeight - margin - 10) {
+            pdf.addPage();
+            yPosition = margin;
+          }
+          pdf.text(line, margin + 8, yPosition);
+          yPosition += 4;
+        }
+        
+        yPosition += 1; // Small gap between references
         pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(11);
       }
@@ -177,6 +248,22 @@ export async function exportToPDF(options: ExportOptions): Promise<void> {
   }
 }
 
+async function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function getPDFPageNumber(pdf: jsPDF, anchorName: string): number {
+  // This is a placeholder - jsPDF doesn't easily support internal anchors
+  // We'll use a workaround with link positioning
+  return 1;
+}
+
 interface ContentBlock {
   type: 'heading' | 'paragraph' | 'list-item' | 'reference';
   text: string;
@@ -193,14 +280,25 @@ function parseContentForPDF(element: HTMLElement): ContentBlock[] {
     if (/^h[1-6]$/.test(tagName)) {
       const level = parseInt(tagName[1]);
       const text = el.textContent?.trim() || '';
-      // Skip empty headings and "References" heading (we'll handle separately)
       if (text && text !== 'References') {
         blocks.push({ type: 'heading', text, level });
       }
     } else if (tagName === 'p') {
       const text = el.textContent?.trim() || '';
       if (text) {
-        blocks.push({ type: 'paragraph', text });
+        // Fix special characters like ₹
+        const fixedText = text.replace(/₹/g, 'Rs.').replace(/[^\x00-\x7F]/g, (char) => {
+          // Replace non-ASCII chars that jsPDF can't handle
+          const replacements: { [key: string]: string } = {
+            '₹': 'Rs.',
+            '€': 'EUR',
+            '£': 'GBP',
+            '¥': 'JPY',
+            '₿': 'BTC',
+          };
+          return replacements[char] || char;
+        });
+        blocks.push({ type: 'paragraph', text: fixedText });
       }
     } else if (tagName === 'li') {
       const text = el.textContent?.trim() || '';
@@ -220,7 +318,6 @@ function parseContentForPDF(element: HTMLElement): ContentBlock[] {
       }
     }
     
-    // Recursively process children (but not for reference items)
     if (!el.classList.contains('reference-item')) {
       Array.from(el.children).forEach(processElement);
     }
@@ -242,7 +339,6 @@ function parseTextWithCitations(text: string): TextSegment[] {
   let match;
   
   while ((match = citationRegex.exec(text)) !== null) {
-    // Add text before citation
     if (match.index > lastIndex) {
       segments.push({
         text: text.substring(lastIndex, match.index),
@@ -250,7 +346,6 @@ function parseTextWithCitations(text: string): TextSegment[] {
       });
     }
     
-    // Add citation
     segments.push({
       text: match[1],
       isCitation: true,
@@ -259,7 +354,6 @@ function parseTextWithCitations(text: string): TextSegment[] {
     lastIndex = match.index + match[0].length;
   }
   
-  // Add remaining text
   if (lastIndex < text.length) {
     segments.push({
       text: text.substring(lastIndex),
