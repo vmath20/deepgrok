@@ -50,7 +50,19 @@ export async function POST(request: NextRequest) {
         messages: [
           {
             role: 'user',
-            content: `Generate a mindmap in markmap markdown format for the following article. Only output the final markmap markdown, no explanations or additional text.\n\nArticle:\n\n${markdown}`,
+            content: `Generate a hierarchical mindmap in standard markdown format for the following article. Use markdown headings (# ## ### ####) to show the hierarchy. Structure it to show the main topics and subtopics clearly. Only output the markdown, no explanations.
+
+Example format:
+# Main Topic
+## Subtopic 1
+### Detail A
+### Detail B
+## Subtopic 2
+### Detail C
+
+Article to analyze:
+
+${markdown}`,
           },
         ],
         temperature: 0.3,
