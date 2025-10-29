@@ -184,20 +184,31 @@ export function ChatBox({ pageContext, pageTitle }: ChatBoxProps) {
 
   if (isMinimized) {
     return (
-      <div className="fixed bottom-8 right-8 z-50">
+      <div 
+        className="fixed z-50 cursor-pointer"
+        style={{ bottom: `${position.y}px`, right: `${position.x}px` }}
+        onMouseDown={handleDragStart}
+      >
         <Button
-          onClick={() => setIsMinimized(false)}
-          className="rounded-full h-14 w-14 shadow-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsMinimized(false);
+          }}
+          className="rounded-full h-14 w-14 shadow-2xl bg-white/20 backdrop-blur-xl border border-white/30 hover:bg-white/30 text-white"
           size="icon"
         >
-          <Maximize2 className="h-6 w-6" />
+          <MessageCircle className="h-6 w-6" />
         </Button>
       </div>
     );
   }
 
   return (
-    <div className="fixed bottom-8 right-8 z-50 w-96">
+    <div 
+      ref={chatBoxRef}
+      className="fixed z-50 w-96"
+      style={{ bottom: `${position.y}px`, right: `${position.x}px` }}
+    >
       <div className="rounded-2xl border border-white/20 bg-white/5 backdrop-blur-2xl shadow-2xl overflow-hidden">
         {/* Header - Draggable */}
         <div 
