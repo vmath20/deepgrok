@@ -19,6 +19,7 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "lucide-react": "^0.344.0",
+    "markmap-common": "^0.17.0",
     "markmap-lib": "^0.17.0",
     "markmap-view": "^0.17.0",
     "marked": "^12.0.0",
