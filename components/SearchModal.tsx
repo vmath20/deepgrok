@@ -72,13 +72,18 @@ export function SearchModal({ isOpen, onClose, onSearch, isLoading = false }: Se
 
         {/* Loading State */}
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-6 max-w-xl px-6">
             <div className="mx-auto">
               <BrandShader size="large" />
             </div>
             <h2 className="text-3xl font-light text-foreground mt-8">
               Loading{dots}
             </h2>
+            
+            {/* Disclaimer */}
+            <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
+              Note: We only support a limited number of articles currently indexed on Grokipedia, which is why some pages won't work.
+            </p>
           </div>
         </div>
       </>
