@@ -22,11 +22,18 @@ export function ChatBox({ pageContext, pageTitle }: ChatBoxProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll to bottom when messages change
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    // Scroll the ScrollArea viewport
+    const viewport = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    if (viewport) {
+      viewport.scrollTop = viewport.scrollHeight;
     }
+    
+    // Also scroll using the ref at the end
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSend = async () => {
@@ -187,6 +194,8 @@ export function ChatBox({ pageContext, pageTitle }: ChatBoxProps) {
                   </div>
                 </div>
               )}
+              {/* Invisible div at the end for scroll anchor */}
+              <div ref={messagesEndRef} />
             </div>
           )}
         </ScrollArea>
