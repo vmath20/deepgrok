@@ -1,7 +1,7 @@
 ![Alt text](public/logo.png)
+![Alt text](demo.mp4)
 
 # DeepGrok
-[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/vmath20/deepgrok)
 
 DeepGrok is an enhanced reader for Grokipedia, designed to provide a superior user experience with intelligent search, structured content, AI-powered interactions, and visual exploration tools. It scrapes Grokipedia pages, cleans and formats the content, and presents it in a clean, navigable interface.
 
