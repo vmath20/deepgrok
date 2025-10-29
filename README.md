@@ -1,5 +1,4 @@
 ![Alt text](public/logo.png)
-![Alt text](demo.mp4)
 
 # DeepGrok
 
