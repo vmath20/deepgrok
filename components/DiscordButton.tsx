@@ -9,11 +9,9 @@ export function DiscordButton() {
   };
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
+    <button
       onClick={handleClick}
-      className="rounded-full border-border/50 hover:border-border"
+      className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
       aria-label="Join Discord"
     >
       <Image 
@@ -23,7 +21,8 @@ export function DiscordButton() {
         height={20}
         className="h-5 w-5"
       />
-    </Button>
+      <span className="text-sm font-medium">Discord</span>
+    </button>
   );
 }
 

@@ -26,24 +26,24 @@ export function GitHubStarButton() {
   };
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
+    <button
       onClick={handleClick}
-      className="gap-2 rounded-full border-border/50 hover:border-border"
+      className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+      aria-label="GitHub Repository"
     >
       <Image 
         src="/icons8-github-50.svg" 
         alt="GitHub" 
-        width={16} 
-        height={16}
-        className="h-4 w-4"
+        width={20} 
+        height={20}
+        className="h-5 w-5"
       />
-      <Star className="h-3.5 w-3.5" />
+      <span className="text-sm font-medium">GitHub</span>
+      <Star className="h-3.5 w-3.5 text-yellow-500" fill="currentColor" />
       {stars !== null && (
-        <span className="text-sm font-medium">{stars.toLocaleString()}</span>
+        <span className="text-sm font-medium">{stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : stars}</span>
       )}
-    </Button>
+    </button>
   );
 }
 
